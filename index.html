@@ -135,7 +135,6 @@
     backdrop-filter:blur(10px);
     background:var(--statusbar-bg);
     border-bottom:1px solid var(--line);
-    isolation:isolate;
   }
   .statusbar-inner{
     max-width:880px;
@@ -163,87 +162,6 @@
   }
   .statusbar nav{display:flex; gap:22px;}
   .statusbar-right{display:flex; align-items:center; gap:22px;}
-
-  /* ---------- HAMBURGER (mobile only) ---------- */
-  .hamburger{
-    display:none;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    gap:5px;
-    width:32px;
-    height:32px;
-    border-radius:7px;
-    border:1px solid var(--line);
-    background:var(--panel);
-    cursor:pointer;
-  }
-  .hamburger span{
-    display:block;
-    width:15px;
-    height:2px;
-    border-radius:2px;
-    background:var(--muted);
-    transition:transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.2s ease, background 0.2s ease;
-  }
-  .hamburger.open span{background:var(--amber);}
-  .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
-  .hamburger.open span:nth-child(2){opacity:0;}
-  .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
-
-  /* ---------- MOBILE MENU PANEL ---------- */
-  .mobile-menu{
-    display:none;
-    position:absolute;
-    top:100%;
-    left:0; right:0;
-    flex-direction:column;
-    padding:8px 28px 18px;
-    background:var(--statusbar-bg);
-    backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--line);
-    opacity:0;
-    transform:translateY(-8px);
-    pointer-events:none;
-    transition:opacity 0.22s ease, transform 0.22s ease;
-  }
-  .mobile-menu.open{
-    opacity:1;
-    transform:translateY(0);
-    pointer-events:auto;
-  }
-  .mobile-menu a{
-    color:var(--muted);
-    text-decoration:none;
-    font-family:'JetBrains Mono',monospace;
-    font-size:13px;
-    padding:13px 4px;
-    border-bottom:1px solid var(--line);
-    opacity:0;
-    transform:translateX(-8px);
-    transition:opacity 0.25s ease, transform 0.25s ease, color 0.2s ease;
-  }
-  .mobile-menu a:last-child{border-bottom:none;}
-  .mobile-menu.open a{opacity:1; transform:translateX(0);}
-  .mobile-menu.open a:nth-child(1){transition-delay:0.05s;}
-  .mobile-menu.open a:nth-child(2){transition-delay:0.1s;}
-  .mobile-menu.open a:nth-child(3){transition-delay:0.15s;}
-  .mobile-menu a:hover{color:var(--amber);}
-
-  .mobile-menu-scrim{
-    display:none;
-    position:fixed;
-    inset:0;
-    z-index:40;
-    background:rgba(0,0,0,0.4);
-    opacity:0;
-    pointer-events:none;
-    transition:opacity 0.22s ease;
-  }
-  .mobile-menu-scrim.open{
-    opacity:1;
-    pointer-events:auto;
-  }
   .statusbar nav a{
     position:relative;
     color:var(--muted);
@@ -294,7 +212,7 @@
 
   /* ---------- HERO ---------- */
   .hero{
-    padding:120px 0 90px;
+    padding:50px 0 90px;
     position:relative;
   }
   .terminal-line{
@@ -844,12 +762,24 @@
     color:var(--text);
   }
   footer .signoff .accent{color:var(--amber);}
+  footer .updated{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--muted);
+    margin-top:18px;
+    opacity:0.7;
+  }
+  footer .updated .dot{
+    display:inline-block;
+    width:5px;height:5px;
+    border-radius:50%;
+    background:var(--teal);
+    margin-right:7px;
+    vertical-align:middle;
+  }
 
   @media (max-width:560px){
     .statusbar nav{display:none;}
-    .hamburger{display:flex;}
-    .mobile-menu{display:flex;}
-    .mobile-menu-scrim{display:block;}
     .hero{padding:90px 0 60px;}
     .pipeline{padding-left:26px;}
     .node::before{left:-26px;}
@@ -871,19 +801,9 @@
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
         <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
       </button>
-      <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
     </div>
   </div>
-
-  <nav class="mobile-menu" id="mobileMenu">
-    <a href="#experience">experience</a>
-    <a href="#education">education</a>
-    <a href="#certifications">certifications</a>
-  </nav>
 </div>
-<div class="mobile-menu-scrim" id="mobileMenuScrim"></div>
 
 <div class="wrap">
 
@@ -1099,11 +1019,22 @@
   <footer class="reveal">
     <div class="line">// end of profile.log</div>
     <div class="signoff">Building the next thing<span class="accent">.</span></div>
+    <div class="updated"><span class="dot"></span>Last updated <span id="lastUpdated"></span></div>
   </footer>
 
 </div>
 
 <script>
+  // last-updated footer line — pulled from the file's own mtime,
+  // so it updates itself on every deploy with no manual editing
+  (function(){
+    const el = document.getElementById('lastUpdated');
+    if(el){
+      const d = new Date(document.lastModified);
+      el.textContent = d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+    }
+  })();
+
   // typewriter boot line
   const bootMsg = "initializing profile... 3 modules loaded [experience, education, certifications]";
   const el = document.getElementById('bootText');
@@ -1133,32 +1064,6 @@
         localStorage.setItem('portfolio-theme','light');
       }
     });
-  })();
-
-  // mobile hamburger menu
-  (function(){
-    const btn = document.getElementById('hamburgerBtn');
-    const menu = document.getElementById('mobileMenu');
-    const scrim = document.getElementById('mobileMenuScrim');
-
-    function openMenu(){
-      btn.classList.add('open');
-      menu.classList.add('open');
-      scrim.classList.add('open');
-      btn.setAttribute('aria-expanded', 'true');
-    }
-    function closeMenu(){
-      btn.classList.remove('open');
-      menu.classList.remove('open');
-      scrim.classList.remove('open');
-      btn.setAttribute('aria-expanded', 'false');
-    }
-    btn.addEventListener('click', ()=>{
-      btn.classList.contains('open') ? closeMenu() : openMenu();
-    });
-    scrim.addEventListener('click', closeMenu);
-    menu.querySelectorAll('a').forEach(a=>a.addEventListener('click', closeMenu));
-    document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeMenu(); });
   })();
 
   // skills modal — only opacity/transform are animated (both
@@ -1228,6 +1133,6 @@
   }, {threshold:0.12});
   revealEls.forEach(el=>io.observe(el));
 </script>
-
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
