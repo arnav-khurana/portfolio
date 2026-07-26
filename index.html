@@ -762,6 +762,21 @@
     color:var(--text);
   }
   footer .signoff .accent{color:var(--amber);}
+  footer .updated{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--muted);
+    margin-top:18px;
+    opacity:0.7;
+  }
+  footer .updated .dot{
+    display:inline-block;
+    width:5px;height:5px;
+    border-radius:50%;
+    background:var(--teal);
+    margin-right:7px;
+    vertical-align:middle;
+  }
 
   @media (max-width:560px){
     .statusbar nav{display:none;}
@@ -1004,11 +1019,24 @@
   <footer class="reveal">
     <div class="line">// end of profile.log</div>
     <div class="signoff">Building the next thing<span class="accent">.</span></div>
+    <div class="updated"><span class="dot"></span>Last updated <span id="lastUpdated"></span></div>
   </footer>
 
 </div>
 
 <script>
+  // last-updated footer line — pulled from the file's own mtime,
+  // so it updates itself on every deploy with no manual editing
+  (function(){
+    const el = document.getElementById('lastUpdated');
+    if(el){
+      const d = new Date(document.lastModified);
+      const datePart = d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+      const timePart = d.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
+      el.textContent = `${datePart} · ${timePart}`;
+    }
+  })();
+
   // typewriter boot line
   const bootMsg = "initializing profile... 3 modules loaded [experience, education, certifications]";
   const el = document.getElementById('bootText');
