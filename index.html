@@ -212,7 +212,7 @@
 
   /* ---------- HERO ---------- */
   .hero{
-    padding:50px 0 90px;
+    padding:120px 0 90px;
     position:relative;
   }
   .terminal-line{
@@ -1031,9 +1031,7 @@
     const el = document.getElementById('lastUpdated');
     if(el){
       const d = new Date(document.lastModified);
-      const datePart = d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
-      const timePart = d.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
-      el.textContent = `${datePart} · ${timePart}`;
+      el.textContent = d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
     }
   })();
 
