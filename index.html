@@ -872,9 +872,9 @@
               <div class="node-title">Intern <span style="color:var(--muted); font-weight:400;">at</span> <span class="node-org">Triple Arcade</span></div>
               <div class="node-sub">Internship · On-site</div>
             </div>
-            <div class="node-when">JUL 2026 → PRESENT</div>
+            <div class="node-when" id="internWhen">JUL 2026 → PRESENT</div>
           </div>
-          <div class="status-chip"><span class="d"></span>1 MO IN · ACTIVE</div>
+          <div class="status-chip"><span class="d"></span><span id="internMonths">1 MO IN</span> · ACTIVE</div>
           <div class="node-detail">Gurugram, Haryana, India</div>
           <div class="skill-pills">
             <span class="skill-pill">Software Testing</span>
@@ -1025,6 +1025,27 @@
 </div>
 
 <script>
+  // internship duration — auto-computed from the actual start date,
+  // so "N MO IN" and the month range update on their own, forever
+  (function(){
+    const start = new Date(2026, 5, 30); // 30 June 2026 (month is 0-indexed)
+    const now = new Date();
+
+    // whole months elapsed, counting the start month as "1 MO IN"
+    let months = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth()) + 1;
+    if(now.getDate() < start.getDate()) months -= 1; // hasn't hit the monthly anniversary yet
+    if(months < 1) months = 1;
+
+    const monthsEl = document.getElementById('internMonths');
+    if(monthsEl) monthsEl.textContent = months + (months === 1 ? ' MO IN' : ' MOS IN');
+
+    const whenEl = document.getElementById('internWhen');
+    if(whenEl){
+      const startLabel = start.toLocaleDateString('en-US', { month:'short' }).toUpperCase() + ' ' + start.getFullYear();
+      whenEl.textContent = startLabel + ' → PRESENT';
+    }
+  })();
+
   // last-updated footer line — pulled from the file's own mtime,
   // so it updates itself on every deploy with no manual editing
   (function(){
