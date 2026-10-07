@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Arnav Khurana — Portfolio</title>
-<meta name="description" content="Portfolio of Arnav Khurana — B.Tech CSE freshman at Shiv Nadar University and Tech Team Member at the Entrepreneurship Cell, exploring agentic AI and automation.">
+<meta name="description" content="Portfolio of Arnav Khurana — B.Tech CSE freshman at Shiv Nadar University, AI/ML Team Member at GDG On Campus and Tech Team Member at the Entrepreneurship Cell, exploring agentic AI and automation.">
 
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A0E13'/%3E%3Ctext x='32' y='43' font-family='Arial, sans-serif' font-size='28' font-weight='700' fill='%23E8A33D' text-anchor='middle'%3EAK%3C/text%3E%3C/svg%3E">
@@ -12,14 +12,14 @@
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Arnav Khurana — Portfolio">
-<meta property="og:description" content="B.Tech CSE freshman at Shiv Nadar University, building with agentic AI and no-code automation. Currently a Tech Team Member at the Entrepreneurship Cell, SNU.">
+<meta property="og:description" content="B.Tech CSE freshman at Shiv Nadar University, building with agentic AI and no-code automation. Currently AI/ML Team Member at GDG On Campus and Tech Team Member at the Entrepreneurship Cell, SNU.">
 <meta property="og:image" content="https://arnavkhurana.vercel.app/portfolio-thumbnail.png">
 <meta property="og:url" content="https://arnavkhurana.vercel.app/">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Arnav Khurana — Portfolio">
-<meta name="twitter:description" content="B.Tech CSE freshman at Shiv Nadar University, building with agentic AI and no-code automation. Currently a Tech Team Member at the Entrepreneurship Cell, SNU.">
+<meta name="twitter:description" content="B.Tech CSE freshman at Shiv Nadar University, building with agentic AI and no-code automation. Currently AI/ML Team Member at GDG On Campus and Tech Team Member at the Entrepreneurship Cell, SNU.">
 <meta name="twitter:image" content="https://arnavkhurana.vercel.app/portfolio-thumbnail.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -812,7 +812,7 @@
       <div class="hero-left">
         <div class="terminal-line" id="bootLine"><span class="prompt">$</span> <span id="bootText"></span><span class="cursor-blink"></span></div>
         <h1>Arnav Khurana<span class="accent">.</span></h1>
-        <p class="role"><b>B.Tech CSE</b> freshman at Shiv Nadar University, building with <b>agentic AI</b> and no-code automation — currently a <b>Tech Team Member</b> at the Entrepreneurship Cell, SNU, and exploring what it takes to start something of my own.</p>
+        <p class="role"><b>B.Tech CSE</b> freshman at Shiv Nadar University, building with <b>agentic AI</b> and no-code automation — currently an <b>AI/ML Team Member</b> at GDG On Campus and a <b>Tech Team Member</b> at the Entrepreneurship Cell, SNU, and exploring what it takes to start something of my own.</p>
 
         <div class="tag-row">
           <span class="tag hot">Agentic AI</span>
@@ -867,15 +867,28 @@
 
     <div class="pipeline">
       <div class="node reveal">
+        <div class="node-card" id="gdgCard">
+          <div class="node-top">
+            <div>
+              <div class="node-title">AI/ML Team Member <span style="color:var(--muted); font-weight:400;">at</span> <span class="node-org">Google Developer Group On Campus, Shiv Nadar IOE</span></div>
+              <div class="node-sub">Full-time · On-site</div>
+            </div>
+            <div class="node-when" data-role-when data-start="2026-10">OCT 2026 → PRESENT</div>
+          </div>
+          <div class="status-chip"><span class="d"></span><span data-role-months data-start="2026-10">1 MO IN</span> · ACTIVE</div>
+        </div>
+      </div>
+
+      <div class="node reveal">
         <div class="node-card" id="ecellCard">
           <div class="node-top">
             <div>
               <div class="node-title">Tech Team Member <span style="color:var(--muted); font-weight:400;">at</span> <span class="node-org">Entrepreneurship Cell, Shiv Nadar University</span></div>
               <div class="node-sub">Full-time · On-site</div>
             </div>
-            <div class="node-when" id="ecellWhen">SEP 2026 → PRESENT</div>
+            <div class="node-when" id="ecellWhen" data-role-when data-start="2026-09">SEP 2026 → PRESENT</div>
           </div>
-          <div class="status-chip"><span class="d"></span><span id="ecellMonths">1 MO IN</span> · ACTIVE</div>
+          <div class="status-chip"><span class="d"></span><span id="ecellMonths" data-role-months data-start="2026-09">2 MOS IN</span> · ACTIVE</div>
           <div class="node-detail">Shiv Nadar University</div>
         </div>
       </div>
@@ -1038,25 +1051,25 @@
 </div>
 
 <script>
-  // E-Cell role duration — auto-computed from the actual start date,
+  // Role durations — auto-computed from each element's data-start (YYYY-MM),
   // so "N MO IN" and the month range update on their own, forever
   (function(){
-    const start = new Date(2026, 8, 1); // 1 Sep 2026 (month is 0-indexed)
     const now = new Date();
+    function parse(v){ const [y,m] = v.split('-').map(Number); return new Date(y, m-1, 1); }
 
-    // whole months elapsed, counting the start month as "1 MO IN"
-    let months = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth()) + 1;
-    if(now.getDate() < start.getDate()) months -= 1; // hasn't hit the monthly anniversary yet
-    if(months < 1) months = 1;
+    document.querySelectorAll('[data-role-months]').forEach(function(el){
+      const start = parse(el.dataset.start);
+      // whole months elapsed, counting the start month as "1 MO IN"
+      let months = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth()) + 1;
+      if(now.getDate() < start.getDate()) months -= 1;
+      if(months < 1) months = 1;
+      el.textContent = months + (months === 1 ? ' MO IN' : ' MOS IN');
+    });
 
-    const monthsEl = document.getElementById('ecellMonths');
-    if(monthsEl) monthsEl.textContent = months + (months === 1 ? ' MO IN' : ' MOS IN');
-
-    const whenEl = document.getElementById('ecellWhen');
-    if(whenEl){
-      const startLabel = start.toLocaleDateString('en-US', { month:'short' }).toUpperCase() + ' ' + start.getFullYear();
-      whenEl.textContent = startLabel + ' → PRESENT';
-    }
+    document.querySelectorAll('[data-role-when]').forEach(function(el){
+      const start = parse(el.dataset.start);
+      el.textContent = start.toLocaleDateString('en-US', { month:'short' }).toUpperCase() + ' ' + start.getFullYear() + ' → PRESENT';
+    });
   })();
 
   // typewriter boot line
